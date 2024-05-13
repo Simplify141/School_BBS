@@ -21,8 +21,8 @@ class Post(models.Model):
     modefied_time = models.DateTimeField(auto_now=True, verbose_name='修改时间')
 
     # 定义外键关系
-    author = models.ForeignKey(User, verbose_name='作者')
-    category = models.ForeignKey('Category',blank=True ,verbose_name='话题')
+    author = models.ForeignKey(User, verbose_name='作者', on_delete=models.CASCADE)
+    category = models.ForeignKey('Category',blank=True ,verbose_name='话题', on_delete=models.CASCADE)
     tags = models.ManyToManyField('Tag', blank=True,verbose_name='专栏')
 
     post_from = models.IntegerField(default=0, choices=POST_FROM.items(), verbose_name=u'文章来源')
@@ -34,7 +34,7 @@ class Post(models.Model):
     transmit_num = models.IntegerField(default=0)
 
     # 精华帖子模型，精华区分类和是否是精华帖
-    best = models.ForeignKey('Best',blank=True,verbose_name='精华',null=True,default=None)
+    best = models.ForeignKey('Best',blank=True,verbose_name='精华',null=True,default=None, on_delete=models.SET_NULL)
     best_act = models.IntegerField(default=0)
 
     # 阅读数
@@ -80,8 +80,8 @@ class Category(models.Model):
 
 class Like(models.Model):
     """点赞"""
-    post = models.ForeignKey("Post")
-    user = models.ForeignKey(User)
+    post = models.ForeignKey("Post", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True,verbose_name='创建时间')
 
     def __str__(self):
@@ -90,8 +90,8 @@ class Like(models.Model):
 
 class Favorite(models.Model):
     """收藏"""
-    user = models.ForeignKey(User)
-    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True,verbose_name='创建时间')
 
     def __str__(self):
@@ -99,8 +99,8 @@ class Favorite(models.Model):
 
 class Transmit(models.Model):
     """转发 """
-    user = models.ForeignKey(User)
-    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True,verbose_name='创建时间')
 
     def __str__(self):
